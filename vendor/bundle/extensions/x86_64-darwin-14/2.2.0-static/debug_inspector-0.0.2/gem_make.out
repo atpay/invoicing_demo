@@ -1,0 +1,12 @@
+/Users/tylerthompson/.rvm/rubies/ruby-2.2.0/bin/ruby -r ./siteconf20150602-15746-l52nnq.rb extconf.rb
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling debug_inspector.c
+linking shared-object debug_inspector.bundle
+ld: warning: directory not found for option '-L/Users/haven/.sm/pkg/active/lib'
+
+make "DESTDIR=" install
+/usr/bin/install -m 0755 debug_inspector.bundle ./.gem.20150602-15746-pfc9hf
