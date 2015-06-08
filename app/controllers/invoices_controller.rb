@@ -16,8 +16,6 @@ class InvoicesController < ApplicationController
 
   def create
 
-    binding.pry
-
     invoiceSummary = InvoiceSummary.new
     invoiceSummary.customer_email = params["invoicecustomeremail"]
     invoiceSummary.title = params["invoicecustomeremail"]

@@ -109,16 +109,15 @@ $(document).ready(function() {
         }
 
 
-        atpay.invoice("tyler@atpay.com", "Bulk Invoice", "Please review your order details below:", breakdown, properties,
+        atpay.invoice($("#invoicecustomeremail").val, "Bulk Invoice", "Please review your order details below:", breakdown, properties,
             function(response){
                 var invoice   = response.invoice;
+                alert('test');
                 uuid  = invoice.uuid;
-
+                $("#atpay_invoice_uuid").val(uuid);
+                $("#atpay-invoicing").unbind('submit').submit();
             }
         );
 
-        $("#atpay_invoice_uuid").val(uuid);
-
-    this.submit();
     });
 });
