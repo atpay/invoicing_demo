@@ -11,10 +11,45 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603203610) do
+ActiveRecord::Schema.define(version: 20150608001011) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "invoice_items", force: :cascade do |t|
+    t.integer  "invoice_summary_id"
+    t.string   "name",               null: false
+    t.string   "description",        null: false
+    t.decimal  "amount",             null: false
+    t.integer  "quantity",           null: false
+    t.date     "date"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "invoice_items", ["invoice_summary_id"], name: "index_invoice_items_on_invoice_summary_id", using: :btree
+
+  create_table "invoice_statuses", force: :cascade do |t|
+    t.integer  "invoice_summary_id"
+    t.string   "status"
+    t.string   "notes"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "invoice_statuses", ["invoice_summary_id"], name: "index_invoice_statuses_on_invoice_summary_id", using: :btree
+
+  create_table "invoice_summaries", force: :cascade do |t|
+    t.string   "title",              null: false
+    t.date     "due_date",           null: false
+    t.string   "customer_name",      null: false
+    t.string   "customer_email",     null: false
+    t.string   "state"
+    t.decimal  "tax_rate"
+    t.string   "atpay_invoice_uuid"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
