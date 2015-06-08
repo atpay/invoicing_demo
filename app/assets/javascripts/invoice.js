@@ -107,9 +107,8 @@ $(document).ready(function() {
             expires_in_seconds		    : 999999,
             auth_only			        : false
         }
-
-
-        atpay.invoice($("#invoicecustomeremail").val, "Bulk Invoice", "Please review your order details below:", breakdown, properties,
+        
+        atpay.invoice($("#invoicecustomeremail").val(), "Bulk Invoice", "Please review your order details below:", breakdown, properties,
             function(response){
                 var invoice   = response.invoice;
                 uuid  = invoice.uuid;
