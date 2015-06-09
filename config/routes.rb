@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   resources :invoices
+  resources :invoice_status
 
 
   # Example resource route with options:
