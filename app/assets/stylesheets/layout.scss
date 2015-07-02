@@ -1,0 +1,33 @@
+img.header_logo {
+  height:35px;
+  width:auto !important;
+  margin-top:5px;
+}
+
+.navbar-custom, .navbar-brand {
+  background-color: #4289a0 !important;
+  color: white !important;
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+}
+input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}

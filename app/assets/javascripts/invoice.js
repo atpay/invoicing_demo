@@ -4,6 +4,7 @@ function calc_total(){
         sum += parseFloat($(this).text().replace('$',''));
     });
     $(".preview-subtotal").text('$' + sum.toFixed(2));
+    $(".preview-tax").text('$' + (sum * 0.0512).toFixed(2));
     $(".preview-total").text('$' + (sum * 1.0512).toFixed(2));
 }
 $(document).on('click', '.input-remove-row', function(){
@@ -14,22 +15,23 @@ $(document).on('click', '.input-remove-row', function(){
     });
 });
 
-$(function(){
-    $('.preview-add-button').click(function(){
-        var form_data = {};
-        form_data["name"] = $('.payment-form input[name="name"]').val();
-        form_data["description"] = $('.payment-form input[name="description"]').val();
-        form_data["amount"] = '$' + (parseFloat($('.payment-form input[name="amount"]').val()).toFixed(2) * $('.payment-form #quantity option:selected').text()).toFixed(2);
-        form_data["quantity"] = $('.payment-form #quantity option:selected').text();
-        form_data["date"] = $('.payment-form input[name="date"]').val();
-        form_data["remove-row"] = '<span class="glyphicon glyphicon-remove"></span>';
-        var row = $('<tr></tr>');
-        $.each(form_data, function( type, value ) {
-            $('<td class="input-'+type+'"></td>').html(value).appendTo(row);
-        });
-        $('.preview-table > tbody:last').append(row);
-        calc_total();
+$(document).on('click','#btnPreview', function(){
+    var form_data = {};
+    form_data["name"] = $('.payment-form input[name="name"]').val();
+    form_data["description"] = $('.payment-form input[name="description"]').val();
+
+    //form_data["amount"] = '$' + (parseFloat($('.payment-form input[name="amount"]').val()).toFixed(2) * $('.payment-form #quantity option:selected').text()).toFixed(2);
+    form_data["price"] = '$' + parseFloat($('.payment-form input[name="amount"]').val()).toFixed(2);
+    form_data["quantity"] = $('.payment-form #quantity option:selected').text();
+    form_data["amount"] = '$' + (parseFloat($('.payment-form input[name="amount"]').val()).toFixed(2) * $('.payment-form #quantity option:selected').text()).toFixed(2);
+    form_data["date"] = $('.payment-form input[name="date"]').val();
+    form_data["remove-row"] = '<span class="glyphicon glyphicon-remove"></span>';
+    var row = $('<tr></tr>');
+    $.each(form_data, function( type, value ) {
+        $('<td class="input-'+type+'"></td>').html(value).appendTo(row);
     });
+    $('.preview-table > tbody:last').append(row);
+    calc_total();
 });
 
 $(document).on('keyup', '#invoicetitle', function(){
@@ -59,19 +61,31 @@ $(document).ready(function() {
             var $tds = $(this).find('td'),
                 name = $tds.eq(0).text(),
                 description = $tds.eq(1).text(),
-                amount = $tds.eq(2).text(),
+                price = $tds.eq(2).text(),
                 quantity = $tds.eq(3).text(),
-                date = $tds.eq(4).text();
+                amount = $tds.eq(4).text(),
 
-                breakdown.push( { name: name, amount: amount.replace('$', ''), quantity: quantity });
+                date = $tds.eq(5).text();
+
+                breakdown.push( { name: name, amount: price.replace('$', ''), quantity: quantity });
 
                 var input = $("<input>")
                     .attr("type", "hidden")
-                    .attr("name", "invoiceitem" + i).val(name + ',' + description + ',' + amount + ',' + quantity + ',' + date );
+                    .attr("name", "invoiceitem" + i).val(name + ',' + description + ',' + price + ',' + quantity + ',' + date );
 
                 $('#atpay-invoicing').append($(input));
         });
 
+        //Add tax as separate item.
+        breakdown.push( { name: "NM Tax", amount: $('.preview-tax').val().replace('$', ''), quantity: '1' });
+        var currentDate = new Date();
+        var formattedDate = currentDate.toLocaleDateString();
+
+        var input = $("<input>")
+            .attr("type", "hidden")
+            .attr("name", "invoiceitemTax").val('NM Tax' + ',' + 'NM Tax' + ',' + $('.preview-tax').val().replace('$', '') + ',' + '1' + ',' + formattedDate );
+
+        $('#atpay-invoicing').append($(input));
 
         billing = {
             street  : "123 Billing",
@@ -106,14 +120,13 @@ $(document).ready(function() {
             item_quantity			    : 9999,
             expires_in_seconds		    : 999999,
             auth_only			        : false
-        }
-        
-        atpay.invoice($("#invoicecustomeremail").val(), "Bulk Invoice", "Please review your order details below:", breakdown, properties,
+      }
+
+        atpay.invoice("tyler@atpay.com", "Bulk Invoice", "Please review your order details below:", breakdown, properties,
             function(response){
-                var invoice   = response.invoice;
-                uuid  = invoice.uuid;
-                $("#atpay_invoice_uuid").val(uuid);
-                $("#atpay-invoicing").unbind('submit').submit();
+                var invoice       = response.invoice;
+                var invoice_uuid  = invoice.uuid;
+                alert (invoice_uuid);
             }
         );
 
